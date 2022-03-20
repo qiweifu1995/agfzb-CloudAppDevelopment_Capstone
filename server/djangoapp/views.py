@@ -104,12 +104,20 @@ def get_dealer_details(request, dealer_id):
         # Get dealers from the URL
         reviews = get_dealer_reviews_from_cf(url, dealer_id)
         # Concat all dealer's short name
-        dealer_reviews = ' '.join([review.sentiment for review in reviews])
+        dealer_reviews = ' '.join([review.review + " " + review.sentiment + "\n" for review in reviews])
 
         # Return a list of dealer short name
         return HttpResponse(dealer_reviews)
 
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
-
+def add_review(request, dealer_id):
+    if request.method == "POST":
+        user = request.user
+        if user.is_authenticated:
+            review = {}
+            review["time"] = datetime.utcnow().isoformat()
+            review["dealership"] = dealer_id
+            valid_field = ["name", "dealership", "review", "purchase", "purchase_date", "car_make", "car_model", "car_year"]
+            for key in request.POST:
+                if key in valid_field:
+                    review[key] = request.POST[key]

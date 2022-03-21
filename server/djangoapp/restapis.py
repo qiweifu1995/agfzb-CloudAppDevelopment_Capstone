@@ -36,6 +36,7 @@ def get_request(url, **kwargs):
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 def post_request(url, json_payload, **kwargs):
     print(kwargs)
+    print(json_payload)
     print("Post to {} ".format(url))
     result = requests.post(url, params=kwargs, json=json_payload)
     return result

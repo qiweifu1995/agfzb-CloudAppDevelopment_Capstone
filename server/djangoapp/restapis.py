@@ -120,17 +120,25 @@ def get_dealer_reviews_from_cf(url, dealerId):
         # For each dealer object
         for review_entry in reviews:
             # Create a CarDealer object with values in `doc` object
-            if review_entry["purchase"]:
-                purchase_date = review_entry["purchase_date"]
-                car_make = review_entry["car_make"]
-                car_model = review_entry["car_model"]
-                car_year = review_entry["car_year"]
+            if "purchase" in review_entry:
+                if review_entry["purchase"]:
+                    purchase_date = review_entry["purchase_date"]
+                    car_make = review_entry["car_make"]
+                    car_model = review_entry["car_model"]
+                    car_year = review_entry["car_year"]
+                else:
+                    purchase_date = ""
+                    car_make = ""
+                    car_model = ""
+                    car_year = ""
             else:
+                review_entry["purchase"] = False
                 purchase_date = ""
                 car_make = ""
                 car_model = ""
                 car_year = ""
-            sentiment = analyze_review_sentiments(review_entry["review"])
+            #sentiment = analyze_review_sentiments(review_entry["review"])
+            sentiment = "positive"
             review_obj = DealerReview(dealership=review_entry["dealership"], name=review_entry["name"], purchase=review_entry["purchase"],
             review=review_entry["review"], purchase_date=purchase_date, car_make=car_make,
             car_model=car_model, car_year=car_year, id=review_entry["id"], sentiment=sentiment)
@@ -144,7 +152,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
 
 
 def analyze_review_sentiments(text):
-    api_key = "XXHMRPTZ443LR4qphHZJLq5pGycc-JeBkWv586MQhY8t"
+    api_key = "YUOSFreFPRdESYzzbKLmeMXpZ8BT2Uu7tD5PVriFqOv5"
     url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/79a474cb-505b-491a-a158-85e0026800e7"
     params = dict()
     params["text"] = text
@@ -152,6 +160,7 @@ def analyze_review_sentiments(text):
     params["features"] = "sentiment"
 
     authenticator = IAMAuthenticator(api_key) 
+    authenticator.set_disable_ssl_verification(True)
 
     natural_language_understanding = NaturalLanguageUnderstandingV1(version='2021-08-01',authenticator=authenticator) 
 

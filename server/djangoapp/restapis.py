@@ -144,7 +144,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
 
 
 def analyze_review_sentiments(text):
-    api_key = "YUOSFreFPRdESYzzbKLmeMXpZ8BT2Uu7tD5PVriFqOv5"
+    api_key = "XXHMRPTZ443LR4qphHZJLq5pGycc-JeBkWv586MQhY8t"
     url = "https://api.us-south.natural-language-understanding.watson.cloud.ibm.com/instances/79a474cb-505b-491a-a158-85e0026800e7"
     params = dict()
     params["text"] = text
@@ -157,7 +157,7 @@ def analyze_review_sentiments(text):
 
     natural_language_understanding.set_service_url(url) 
 
-    response = natural_language_understanding.analyze( text=text ,features=Features(sentiment=SentimentOptions(targets=[text]))).get_result() 
+    response = natural_language_understanding.analyze( text=text ,features=Features(sentiment=SentimentOptions(targets=[text]))).get_result()
 
     label=json.dumps(response, indent=2) 
 

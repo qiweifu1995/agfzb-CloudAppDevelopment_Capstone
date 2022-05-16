@@ -114,7 +114,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
     results = []
     # Call get_request with a URL parameter
     json_result = get_request(url, dealerId=dealerId)
-    if json_result:
+    if "body" in json_result:
         # Get the row list in JSON as dealers
         reviews = json_result["body"]
         # For each dealer object
@@ -137,8 +137,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
                 car_make = ""
                 car_model = ""
                 car_year = ""
-            #sentiment = analyze_review_sentiments(review_entry["review"])
-            sentiment = "positive"
+            sentiment = analyze_review_sentiments(review_entry["review"])
             review_obj = DealerReview(dealership=review_entry["dealership"], name=review_entry["name"], purchase=review_entry["purchase"],
             review=review_entry["review"], purchase_date=purchase_date, car_make=car_make,
             car_model=car_model, car_year=car_year, id=review_entry["id"], sentiment=sentiment)
@@ -166,9 +165,7 @@ def analyze_review_sentiments(text):
 
     natural_language_understanding.set_service_url(url) 
 
-    response = natural_language_understanding.analyze( text=text ,features=Features(sentiment=SentimentOptions(targets=[text]))).get_result()
-
-    label=json.dumps(response, indent=2) 
+    response = natural_language_understanding.analyze(language="en", text=text ,features=Features(sentiment=SentimentOptions(targets=[text]))).get_result()
 
     label = response['sentiment']['document']['label'] 
 
